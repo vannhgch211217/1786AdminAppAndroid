@@ -39,7 +39,7 @@ fun ListScreen() {
         ) }
     ) { innerPadding ->
         Column(modifier = Modifier
-            .padding(innerPadding) // Add innerPadding for proper spacing
+            .padding(innerPadding)
             .padding(16.dp)) {
             // Scrollable list of courses
             LazyColumn(modifier = Modifier.weight(1f)) {
@@ -48,8 +48,8 @@ fun ListScreen() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
-                            .background(Color(0xFFE2E2E2)) // Grey background
-                            .padding(16.dp) // Inner padding for content
+                            .background(Color(0xFFE2E2E2))
+                            .padding(16.dp)
                             .clickable {
                                 nav.navigate("${Screens.Detail.name}/${course.cid}")
                             }
@@ -66,7 +66,6 @@ fun ListScreen() {
                     }
                 }
 
-                // If there are no courses, show a message
                 if (courses.value.isEmpty()) {
                     item {
                         Text(text = "No courses available")

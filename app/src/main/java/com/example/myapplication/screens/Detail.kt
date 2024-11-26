@@ -37,30 +37,23 @@ fun DetailScreen(courseId: Int) {
     val courseDao = LocalCourseDao.current
     val nav = LocalNav.current
 
-    // State to hold the course details
     val course = remember { mutableStateOf<Course?>(null) }
 
-    // Retrieve the course details based on courseId
     LaunchedEffect(courseId) {
         course.value = courseDao.getCourseById(courseId)
     }
 
-    // Check if course is not null
     course.value?.let { courseData ->
-        // States for course details
         val capacityState = remember { mutableStateOf(courseData.capacity) }
         val durationState = remember { mutableStateOf(courseData.duration) }
         val pricePerClassState = remember { mutableStateOf(courseData.price) }
         val descriptionState = remember { mutableStateOf(courseData.description.toString()) }
 
-        // State for radio buttons
         val selectedClassType = remember { mutableStateOf(courseData.type) }
         val classTypes = listOf("Flow Yoga", "Aerial Yoga", "Family Yoga")
 
-        // State for selected date
         val selectedDate = remember { mutableStateOf(courseData.day) }
 
-        // Initialize time based on the course's stored time
         val (time, setTime) = remember { mutableStateOf(Calendar.getInstance()) }
         val timeParts = courseData.time.split(":").map { it.toInt() }
 //        time.set(Calendar.HOUR_OF_DAY, timeParts[0])
@@ -83,7 +76,7 @@ fun DetailScreen(courseId: Int) {
                 },
                 time.get(Calendar.HOUR_OF_DAY),
                 time.get(Calendar.MINUTE),
-                true // is24HourView
+                true
             ).show()
         }
 
@@ -94,9 +87,8 @@ fun DetailScreen(courseId: Int) {
                 text = { Text("Are you sure you want to do this action?") },
                 confirmButton = {
                     TextButton(onClick = {
-                        // Create the updated course object
                         val updatedCourse = Course(
-                            cid = courseData.cid, // Ensure you set the id of the existing course
+                            cid = courseData.cid,
                             day = selectedDate.value,
                             time = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time.time),
                             capacity = capacityState.value,
@@ -180,7 +172,6 @@ fun DetailScreen(courseId: Int) {
                     keyboardOptions = keyboardOptionsText
                 )
 
-                // Radio buttons for Class Type
                 Text("Type of Class", style = commonTextStyle, modifier = Modifier.padding(start = 30.dp, end = 16.dp, top = 16.dp))
                 classTypes.forEach { classType ->
                     Row(modifier = Modifier.padding(start = 16.dp, top = 16.dp)) {
@@ -194,7 +185,6 @@ fun DetailScreen(courseId: Int) {
                     }
                 }
 
-                // Day of Week
                 Text("Day of Week", style = commonTextStyle, modifier = Modifier.padding(start = 30.dp, end = 16.dp, top = 16.dp))
                 listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday").forEach { day ->
                     Row(modifier = Modifier.padding(start = 16.dp, top = 16.dp)) {
@@ -208,7 +198,6 @@ fun DetailScreen(courseId: Int) {
                     }
                 }
 
-                // Time Picker Text
                 Text(
                     text = "Selected Time: ${SimpleDateFormat("HH:mm", Locale.getDefault()).format(time.time)}",
                     modifier = Modifier
@@ -233,7 +222,6 @@ fun DetailScreen(courseId: Int) {
             }
         }
     } ?: run {
-        // Optional: handle the case where course is null
         Text("Course not found", modifier = Modifier.fillMaxSize(), style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))
     }
 }

@@ -83,7 +83,6 @@ fun FormScreen() {
         Time: ${SimpleDateFormat("HH:mm", Locale.getDefault()).format(time.time)}
     """.trimIndent()
 
-    // TimePickerDialog
     if (showTimePicker) {
         TimePickerDialog(
             LocalContext.current,
@@ -105,7 +104,6 @@ fun FormScreen() {
             text = { Text(courseInfo) },
             confirmButton = {
                 TextButton(onClick = {
-                    // Xác nhận lưu khóa học
                     val newCourse = Course(
                         id = courseDao.getMaxCourseId() + 1,
                         day = selectedDate.value,
@@ -144,7 +142,6 @@ fun FormScreen() {
             CustomTextField(valueState = pricePerClassState, label = "Course price", placeholder = "Enter price", keyboardOptions = keyboardOptionsNumber)
             CustomTextField(valueState = descriptionState, label = "Course description", placeholder = "Enter description", keyboardOptions = keyboardOptionsText)
 
-            // Radio buttons for Class Type
             Text("Type of Class", style = commonTextStyle, modifier = Modifier.padding(start = 30.dp, end = 16.dp, top = 16.dp))
             classTypes.forEach { classType ->
                 Row(modifier = Modifier.padding(start = 16.dp, top = 16.dp)) {
@@ -158,7 +155,6 @@ fun FormScreen() {
                 }
             }
 
-            // Radio buttons for Day of Week
             Text("Day of Week", style = commonTextStyle, modifier = Modifier.padding(start = 30.dp, end = 16.dp, top = 16.dp))
             dayOfWeek.forEach { day ->
                 Row(modifier = Modifier.padding(start = 16.dp, top = 16.dp)) {
@@ -172,7 +168,6 @@ fun FormScreen() {
                 }
             }
 
-            // Time Picker Text
             Text(
                 text = "Selected Time: ${SimpleDateFormat("HH:mm", Locale.getDefault()).format(time.time)}",
                 modifier = Modifier
@@ -195,7 +190,6 @@ fun FormScreen() {
                 // Clear the error message initially
                 errorMessage.value = ""
 
-                // Validate input fields
                 when {
                     capacityState.value.isEmpty() -> errorMessage.value = "Capacity cannot be empty"
                     durationState.value.isEmpty() -> errorMessage.value = "Duration cannot be empty"

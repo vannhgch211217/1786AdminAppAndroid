@@ -32,21 +32,16 @@ fun DetailClassScreen(classId: Int) {
     val teacherState = remember { mutableStateOf("") }
     val commentState = remember { mutableStateOf("") }
 
-    // States to hold error messages for validation
     val teacherErrorState = remember { mutableStateOf("") }
     val courseErrorState = remember { mutableStateOf("") }
 
-    // State to hold the list of courses
     val courseList = remember { mutableStateOf<List<Course>>(emptyList()) }
 
-    // State to hold the selected course ID
     val selectedCourseId = remember { mutableStateOf(0) }
 
-    // Date state
-    val (classDate, setClassDate) = remember { mutableStateOf(Date()) } // Move this declaration here
+    val (classDate, setClassDate) = remember { mutableStateOf(Date()) }
     val (showDatePicker, setShowDatePicker) = remember { mutableStateOf(false) }
 
-    // Load class details to edit
     val currentClass = remember { mutableStateOf<Class?>(null) }
     LaunchedEffect(classId) {
         currentClass.value = classDao.getClassById(classId)
@@ -54,14 +49,12 @@ fun DetailClassScreen(classId: Int) {
             teacherState.value = it.teacher
             commentState.value = it.comment ?: ""
             selectedCourseId.value = it.courseId.toInt()
-            // Set date from the existing class (make sure to parse date correctly)
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            val parsedDate = dateFormat.parse(it.date) ?: Date() // Safely parse the date
-            setClassDate(parsedDate) // Now this reference should be resolved
+            val parsedDate = dateFormat.parse(it.date) ?: Date()
+            setClassDate(parsedDate)
         }
     }
 
-    // Retrieve courses from the database
     LaunchedEffect(Unit) {
         courseList.value = courseDao.getAll()
     }
@@ -75,7 +68,7 @@ fun DetailClassScreen(classId: Int) {
             LocalContext.current,
             { _, year, month, dayOfMonth ->
                 calendar.set(year, month, dayOfMonth)
-                setClassDate(calendar.time) // Use setClassDate here
+                setClassDate(calendar.time)
                 setShowDatePicker(false)
             },
             calendar.get(Calendar.YEAR),
@@ -91,7 +84,7 @@ fun DetailClassScreen(classId: Int) {
             Column(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
-                    .verticalScroll(rememberScrollState()) // Enable vertical scrolling
+                    .verticalScroll(rememberScrollState())
             ) {
                 CustomTextField(
                     valueState = teacherState,
@@ -115,7 +108,6 @@ fun DetailClassScreen(classId: Int) {
                     keyboardOptions = keyboardOptionsText
                 )
 
-                // Radio buttons for Course selection
                 Text("Select Course", style = commonTextStyle, modifier = Modifier.padding(start = 30.dp, end = 16.dp, top = 16.dp))
                 courseList.value.forEach { course ->
                     Row(modifier = Modifier.padding(start = 16.dp, top = 16.dp)) {
@@ -170,27 +162,25 @@ fun DetailClassScreen(classId: Int) {
                                 teacherErrorState.value = "Teacher cannot be empty."
                             }
 
-                            // Validate course selection
                             if (selectedCourseId.value == 0) {
                                 courseErrorState.value = "Please select a course."
                             }
 
-                            // If all validations pass, update class
                             if (teacherErrorState.value.isEmpty() && courseErrorState.value.isEmpty()) {
                                 // Create the updated Class
                                 val updatedClass = Class(
-                                    cid = currentClass.value!!.cid, // Ensure you set the id of the existing class
+                                    cid = currentClass.value!!.cid,
                                     date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(classDate),
                                     comment = commentState.value,
                                     teacher = teacherState.value,
-                                    courseId = selectedCourseId.value // Use the selected course ID here
+                                    courseId = selectedCourseId.value
                                 )
-                                classDao.update(updatedClass) // Assuming you have an update method
+                                classDao.update(updatedClass)
                                 nav.navigate(Screens.ListClass.name)
                             }
                         }
                     },
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp) // Padding for the button
+                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp)
                 ) {
                     Text(text = "Update")
                 }

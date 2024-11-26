@@ -29,7 +29,7 @@ fun ListClassScreen() {
     val classDao = LocalClassDao.current
     val courseDao = LocalCourseDao.current
     val classes = remember { mutableStateOf(listOf<Class>()) }
-    val courses = remember { mutableStateOf(listOf<Course>()) } // Change this to Course
+    val courses = remember { mutableStateOf(listOf<Course>()) }
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
 
     LaunchedEffect(Unit) {
@@ -46,7 +46,7 @@ fun ListClassScreen() {
         topBar = { MyTopBar(title = "Class List",onBackPressed = {}, navigationIcon = {}) }
     ) { innerPadding ->
         Column(modifier = Modifier
-            .padding(innerPadding) // Add innerPadding for proper spacing
+            .padding(innerPadding)
             .padding(16.dp)) {
             // Search TextField
             TextField(
@@ -65,8 +65,8 @@ fun ListClassScreen() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
-                            .background(Color(0xFFE2E2E2)) // Grey background
-                            .padding(16.dp) // Inner padding for content
+                            .background(Color(0xFFE2E2E2))
+                            .padding(16.dp)
                             .clickable {
                                 nav.navigate("${Screens.DetailClass.name}/${classItem.cid}")
                             }
