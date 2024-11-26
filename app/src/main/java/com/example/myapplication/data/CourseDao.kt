@@ -41,6 +41,8 @@ interface CourseDao {
     @Query("SELECT MAX(cid) FROM courses")
     fun getMaxCourseId(): Int
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg courses: Course)
 }
 interface CourseService {
 

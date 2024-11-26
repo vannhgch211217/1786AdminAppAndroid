@@ -63,8 +63,8 @@ fun DetailScreen(courseId: Int) {
         // Initialize time based on the course's stored time
         val (time, setTime) = remember { mutableStateOf(Calendar.getInstance()) }
         val timeParts = courseData.time.split(":").map { it.toInt() }
-        time.set(Calendar.HOUR_OF_DAY, timeParts[0])
-        time.set(Calendar.MINUTE, timeParts[1])
+//        time.set(Calendar.HOUR_OF_DAY, timeParts[0])
+//        time.set(Calendar.MINUTE, timeParts[1])
 
         val (showTimePicker, setShowTimePicker) = remember { mutableStateOf(false) }
 

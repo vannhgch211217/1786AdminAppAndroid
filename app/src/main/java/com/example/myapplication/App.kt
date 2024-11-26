@@ -22,6 +22,8 @@ import com.example.myapplication.data.AppDatabase
 import com.example.myapplication.data.ClassDao
 import com.example.myapplication.data.ClassService
 import com.example.myapplication.data.CourseDao
+import com.example.myapplication.data.Course
+import com.example.myapplication.data.Class
 import com.example.myapplication.data.CourseService
 import com.example.myapplication.screens.FormClassScreen
 import com.example.myapplication.screens.DetailScreen
@@ -54,12 +56,32 @@ fun App() {
         context = LocalContext.current
     ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
 
+
     val courseDao = db.CourseDao()
     val classDao = db.ClassDao()
 
-    // Retrofit setup
+    val existingCourses = courseDao.getAll().isNotEmpty()
+
+    if (!existingCourses) {
+        courseDao.insertAll(
+            Course(id = 1, day = "Monday", time = "10:00", capacity = "20", duration = "30", price = "100", type = "Flow Yoga", description = "Basic Flow Yoga class"),
+            Course(id = 2, day = "Wednesday", time = "14:00", capacity = "15", duration = "60", price = "80", type = "Aerial Yoga", description = "Aerial Yoga for beginners"),
+            Course(id = 3, day = "Saturday", time = "16:00", capacity = "25", duration = "90", price = "90", type = "Family Yoga", description = "Family Yoga session")
+        )
+    }
+
+    val existingClasses = classDao.getAll().isNotEmpty()
+
+    if (!existingClasses) {
+        classDao.insertAll(
+            Class(date = "23/12/2024", teacher = "Alice", comment = "Bring your own mat", courseId = 1),
+            Class(date = "30/12/2024", teacher = "Bob", comment = "Easy class", courseId = 1),
+            Class(date = "25/12/2024", teacher = "Lily", comment = "Focus on breathing", courseId = 3)
+        )
+    }
+    // Retrofit setup input your IPv4 Address
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.55.110:3000")
+        .baseUrl("http://192.168.55.103:3000")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -76,10 +98,8 @@ fun App() {
             val localCourses = coursesFlow.value
             val localClasses = classesFlow.value
 
-            // Sync Courses
             val courseResponse = courseService.insertCourse(localCourses)
 
-            // Sync Classes
             val classResponse = classService.insertClass(localClasses)
 
             if (courseResponse.isSuccessful && classResponse.isSuccessful) {
@@ -94,7 +114,6 @@ fun App() {
         }
     }
 
-    // Sync whenever the courses or classes list changes
     LaunchedEffect(coursesFlow.value, classesFlow.value) {
         syncData()
     }

@@ -30,6 +30,9 @@ interface ClassDao {
 
     @Query("SELECT * FROM classes WHERE cid = :classId")
     fun getClassById(classId: Int): Class
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg classes: Class)
 }
 interface ClassService {
 

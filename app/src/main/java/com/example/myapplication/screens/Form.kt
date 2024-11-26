@@ -61,7 +61,6 @@ fun FormScreen() {
     val pricePerClassState = remember { mutableStateOf("") }
     val descriptionState = remember { mutableStateOf("") }
 
-    // Trạng thái xác nhận lưu
     val saveConfirm = remember { mutableStateOf(false) }
 
     // Radio button state
@@ -99,7 +98,6 @@ fun FormScreen() {
         ).show()
     }
 
-    // Popup xác nhận lưu
     if (saveConfirm.value) {
         AlertDialog(
             onDismissRequest = { saveConfirm.value = false },
